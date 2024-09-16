@@ -1,6 +1,6 @@
-# ol1: Using Ollama to create o1-like reasoning chains
+# ol1: Using Perplexity to create o1-like reasoning chains
 
-* IMPORTANT: This repository is a fork of [bklieger-groq](https://github.com/bklieger-groq)'s [ol1](https://github.com/bklieger-groq/ol1) with the intention to offer a privacy-friendly local alternative to their work.
+* IMPORTANT: This repository is a fork of [bklieger-groq](https://github.com/bklieger-groq)'s [ol1](https://github.com/bklieger-groq/ol1) with the intention to offer a Perplexity-based alternative to their work.
 
 *** Note: This README is a modified version of the original README from [bklieger-groq](https://github.com/bklieger-groq)'s [ol1](https://github.com/bklieger-groq/ol1) repository. It may contains inaccuracies. ***
 
@@ -14,13 +14,13 @@ ol1 demonstrates the potential of prompting alone to overcome straightforward LL
 
 ### How it works
 
-ol1 powered by local Ollama models and creates reasoning chains, in principle a dynamic Chain of Thought, that allows the LLM to "think" and solve some logical problems that usually otherwise stump leading models.
+ol1 powered by local Perplexity models and creates reasoning chains, in principle a dynamic Chain of Thought, that allows the LLM to "think" and solve some logical problems that usually otherwise stump leading models.
 
 At each step, the LLM can choose to continue to another reasoning step, or provide a final answer. Each step is titled and visible to the user. The system prompt also includes tips for the LLM. There is a full explanation under Prompt Breakdown, but a few examples are asking the model to “include exploration of alternative answers” and “use at least 3 methods to derive the answer”.
 
 ### Features of this fork
 
-* Runs on local Ollama models
+* Runs on local Perplexity models
 * Fully configurable via .env file
 
 ### Original benchmarks with g1
