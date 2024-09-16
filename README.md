@@ -1,27 +1,37 @@
-# g1: Using Llama-3.1 70b on Groq to create o1-like reasoning chains
+# ol1: Using Ollama to create o1-like reasoning chains
 
-[Video Demo](https://github.com/user-attachments/assets/db2a221f-f8eb-48c3-b5a7-8399c6300243)
+* IMPORTANT: This repository is a fork of [bklieger-groq](https://github.com/bklieger-groq)'s [ol1](https://github.com/bklieger-groq/ol1) with the intention to offer a privacy-friendly local alternative to their work.
+
+*** Note: This README is a modified version of the original README from [bklieger-groq](https://github.com/bklieger-groq)'s [ol1](https://github.com/bklieger-groq/ol1) repository. It may contains inaccuracies. ***
+
 
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown, and the app uses an open source model.
 
-g1 is experimental and being open sourced to help inspire the open source community to develop new strategies to produce o1-like reasoning. This experiment helps show the power of prompting reasoning in visualized steps, not a comparison to or full replication of o1, which uses different techniques. OpenAI's o1 is instead trained with large-scale reinforcement learning to reason using Chain of Thought, achieving state-of-the-art performance on complex PhD-level problems. 
+ol1 is experimental and being open sourced to help inspire the open source community to develop new strategies to produce o1-like reasoning. This experiment helps show the power of prompting reasoning in visualized steps, not a comparison to or full replication of o1, which uses different techniques. OpenAI's o1 is instead trained with large-scale reinforcement learning to reason using Chain of Thought, achieving state-of-the-art performance on complex PhD-level problems. 
 
-g1 demonstrates the potential of prompting alone to overcome straightforward LLM logic issues like the Strawberry problem, allowing existing open source models to benefit from dynamic reasoning chains and an improved interface for exploring them.
+ol1 demonstrates the potential of prompting alone to overcome straightforward LLM logic issues like the Strawberry problem, allowing existing open source models to benefit from dynamic reasoning chains and an improved interface for exploring them.
 
 
 ### How it works
 
-g1 powered by Llama3.1-70b creates reasoning chains, in principle a dynamic Chain of Thought, that allows the LLM to "think" and solve some logical problems that usually otherwise stump leading models.
+ol1 powered by local Ollama models and creates reasoning chains, in principle a dynamic Chain of Thought, that allows the LLM to "think" and solve some logical problems that usually otherwise stump leading models.
 
 At each step, the LLM can choose to continue to another reasoning step, or provide a final answer. Each step is titled and visible to the user. The system prompt also includes tips for the LLM. There is a full explanation under Prompt Breakdown, but a few examples are asking the model to “include exploration of alternative answers” and “use at least 3 methods to derive the answer”.
+
+### Features of this fork
+
+* Runs on local Ollama models
+* Fully configurable via .env file
+
+### Original benchmarks with g1
 
 The reasoning ability of the LLM is therefore improved through combining Chain-of-Thought with the requirement to try multiple methods, explore alternative answers, question previous draft solutions, and consider the LLM’s limitations. This alone, without any training, is sufficient to achieve ~70% accuracy on the Strawberry problem (n=10, "How many Rs are in strawberry?"). Without prompting, Llama-3.1-70b had 0% accuracy and ChatGPT-4o had 30% accuracy.
 
 
-### Examples
+### Examples of the original g1 in action
 
 > [!IMPORTANT]
-> g1 is not perfect, but it can perform significantly better than LLMs out-of-the-box. From initial testing, g1 accurately solves simple logic problems 60-80% of the time that usually stump LLMs. However, accuracy has yet to be formally evaluated. See examples below.
+> ol1 is not perfect, but it can perform significantly better than LLMs out-of-the-box. From initial testing, ol1 accurately solves simple logic problems 60-80% of the time that usually stump LLMs. However, accuracy has yet to be formally evaluated. See examples below.
 
 
 ##### How many Rs are in strawberry?
@@ -57,28 +67,9 @@ pip3 install -r requirements.txt
 ~~~
 
 ~~~
-export GROQ_API_KEY=gsk...
-~~~
-
-~~~
 streamlit run app.py
 ~~~
 
----
-
-Alternatively, follow these additional instructions to use the Gradio UI:
-
-~~~
-cd gradio
-~~~
-
-~~~
-pip3 install -r requirements.txt
-~~~
-
-~~~
-python3 app.py
-~~~
 
 
 ### Prompting Strategy
@@ -138,4 +129,6 @@ Finally, after the problem is added as a user message, an assistant message is l
 
 ### Credits
 
-This app was developed by [Benjamin Klieger](https://x.com/benjaminklieger).
+This app was developed by [Benjamin Klieger](https://x.com/benjaminklieger), to whom all credits for the original work should go.
+
+This fork is maintained by [TCSenpai](https://github.com/tcsenpai).
