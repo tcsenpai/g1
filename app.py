@@ -1,22 +1,34 @@
 import streamlit as st
-import groq
-import os
 import json
 import time
+import requests  # Add this import for making HTTP requests to Ollama
+from dotenv import load_dotenv
+import os
 
-client = groq.Groq()
+# Load environment variables
+load_dotenv()
+
+# Get configuration from .env file
+OLLAMA_URL = os.getenv('OLLAMA_URL', 'http://localhost:11434')
+OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'llama2')
 
 def make_api_call(messages, max_tokens, is_final_answer=False):
     for attempt in range(3):
         try:
-            response = client.chat.completions.create(
-                model="llama-3.1-70b-versatile",
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=0.2,
-                response_format={"type": "json_object"}
+            response = requests.post(
+                f"{OLLAMA_URL}/api/chat",
+                json={
+                    "model": OLLAMA_MODEL,
+                    "messages": messages,
+                    "stream": False,
+                    "options": {
+                        "num_predict": max_tokens,
+                        "temperature": 0.2
+                    }
+                }
             )
-            return json.loads(response.choices[0].message.content)
+            response.raise_for_status()
+            return json.loads(response.json()["message"]["content"])
         except Exception as e:
             if attempt == 2:
                 if is_final_answer:
@@ -80,14 +92,19 @@ Example of a valid JSON response:
 def main():
     st.set_page_config(page_title="g1 prototype", page_icon="🧠", layout="wide")
     
-    st.title("g1: Using Llama-3.1 70b on Groq to create o1-like reasoning chains")
+    st.title("ol1: Using Ollama to create o1-like reasoning chains")
     
     st.markdown("""
-    This is an early prototype of using prompting to create o1-like reasoning chains to improve output accuracy. It is not perfect and accuracy has yet to be formally evaluated. It is powered by Groq so that the reasoning step is fast!
+    This is an early prototype of using prompting to create o1-like reasoning chains to improve output accuracy. It is not perfect and accuracy has yet to be formally evaluated. It is powered by Ollama so that the reasoning step is local!
                 
-    Open source [repository here](https://github.com/bklieger-groq)
+    Forked from [bklieger-groq](https://github.com/bklieger-groq)
+    Open source [repository here](https://github.com/tcsenpai/ol1)
     """)
-    
+
+    st.markdown(f"**Current Configuration:**")
+    st.markdown(f"- Ollama URL: `{OLLAMA_URL}`")
+    st.markdown(f"- Ollama Model: `{OLLAMA_MODEL}`")
+
     # Text input for user query
     user_query = st.text_input("Enter your query:", placeholder="e.g., How many 'R's are in the word strawberry?")
     
