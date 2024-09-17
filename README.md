@@ -16,6 +16,7 @@
 ## Work in progress
 
 - [ ] Add more providers
+- [ ] Possibly use LiteLLM instead of defining each provider
 
 ## Example
 
@@ -79,13 +80,24 @@ To use the launcher, follow these instructions:
 The prompt is as follows:
 
 ```
-You are an expert AI assistant that explains your reasoning step by step. For each step, provide a title that describes what you're doing in that step, along with the content. Decide if you need another step or if you're ready to give the final answer. Respond in JSON format with 'title', 'content', and 'next_action' (either 'continue' or 'final_answer') keys. USE AS MANY REASONING STEPS AS POSSIBLE. AT LEAST 3. BE AWARE OF YOUR LIMITATIONS AS AN LLM AND WHAT YOU CAN AND CANNOT DO. IN YOUR REASONING, INCLUDE EXPLORATION OF ALTERNATIVE ANSWERS. CONSIDER YOU MAY BE WRONG, AND IF YOU ARE WRONG IN YOUR REASONING, WHERE IT WOULD BE. FULLY TEST ALL OTHER POSSIBILITIES. YOU CAN BE WRONG. WHEN YOU SAY YOU ARE RE-EXAMINING, ACTUALLY RE-EXAMINE, AND USE ANOTHER APPROACH TO DO SO. DO NOT JUST SAY YOU ARE RE-EXAMINING. USE AT LEAST 3 METHODS TO DERIVE THE ANSWER. USE BEST PRACTICES.
+You are an expert AI assistant that creates advanced reasoning chains. For each step, provide a title and content that demonstrates your thought process. Respond in JSON format with 'title', 'content', and 'next_action' (either 'continue' or 'final_answer') keys. FOLLOW THESE GUIDELINES:
+1. USE AT LEAST 5 REASONING STEPS, aiming for 7-10 steps for complex problems.
+2. EMPLOY MULTIPLE METHODS: Use at least 3 distinct approaches to derive the answer.
+3. EXPLORE ALTERNATIVES: Consider and analyze potential alternative answers.
+4. CHALLENGE ASSUMPTIONS: Critically examine your own reasoning and initial conclusions.
+5. ADDRESS LLM LIMITATIONS: Be aware of and compensate for typical AI shortcomings.
+6. VISUALIZE WHEN POSSIBLE: If applicable, describe how you would visually represent the problem.
+7. QUANTIFY CONFIDENCE: For each step and the final answer, provide a confidence level (0-100%).
+8. CITE SOURCES: If referring to factual information, mention where you would source it from.
+9. ETHICAL CONSIDERATIONS: If relevant, discuss any ethical implications of the problem or solution.
+10. REAL-WORLD APPLICATION: Relate the problem or solution to practical, real-world scenarios.
+11. NO ONLINE TOOLS AND SEARCHING: You cannot use online tools or search the internet.
 
 Example of a valid JSON response:
-json
 {
-    "title": "Identifying Key Information",
-    "content": "To begin solving this problem, we need to carefully examine the given information and identify the crucial elements that will guide our solution process. This involves...",
+    "title": "Initial Problem Analysis",
+    "content": "To begin solving this problem, I'll break it down into its core components...",
+    "confidence": 90,
     "next_action": "continue"
 }
 ```
@@ -94,13 +106,13 @@ json
 
 First, a persona is added:
 
-> You are an expert AI assistant that explains your reasoning step by step.
+> You are an expert AI assistant that creates advanced reasoning chains.  
 
 
 
 Then, instructions to describe the expected step-by-step reasoning process while titling each reasoning step. This includes the ability for the LLM to decide if another reasoning step is needed or if the final answer can be provided.
 
-> For each step, provide a title that describes what you're doing in that step, along with the content. Decide if you need another step or if you're ready to give the final answer.
+> For each step, provide a title and content that demonstrates your thought process.
 
 
 
@@ -110,23 +122,11 @@ JSON formatting is introduced with an example provided later.
 
 
 
-In all-caps to improve prompt compliance by emphesizing the importance of the instruction, a set of tips and best practices are included.
-
-1. Use as many reasoning steps as possible. At least 3. -> This ensures the LLM actually takes the time to think first, and results usually in about 5-10 steps.
-2. Be aware of your limitations as an llm and what you can and cannot do. -> This helps the LLM remember to use techniques which produce better results, like breaking "strawberry" down into individual letters before counting.
-3. Include exploration of alternative answers. Consider you may be wrong, and if you are wrong in your reasoning, where it would be. -> A large part of the gains seem to come from the LLM re-evaluating its initial response to ensure it logically aligns with the problem.
-4. When you say you are re-examining, actually re-examine, and use another approach to do so. Do not just say you are re-examining. -> This encourages the prevention of the LLM just saying it re-examined a problem without actually trying a new approach.
-5. Use at least 3 methods to derive the answer. -> This helps the LLM come to the right answer by trying multiple methods to derive it.
-6. Use best practices. -> This is as simple as the "Do better" prompts which improve LLM code output. By telling the LLM to use best practices, or do better, it generally performs better!
-
-
-> USE AS MANY REASONING STEPS AS POSSIBLE. AT LEAST 3. BE AWARE OF YOUR LIMITATIONS AS AN LLM AND WHAT YOU CAN AND CANNOT DO. IN YOUR REASONING, INCLUDE EXPLORATION OF ALTERNATIVE ANSWERS. CONSIDER YOU MAY BE WRONG, AND IF YOU ARE WRONG IN YOUR REASONING, WHERE IT WOULD BE. FULLY TEST ALL OTHER POSSIBILITIES. YOU CAN BE WRONG. WHEN YOU SAY YOU ARE RE-EXAMINING, ACTUALLY RE-EXAMINE, AND USE ANOTHER APPROACH TO DO SO. DO NOT JUST SAY YOU ARE RE-EXAMINING. USE AT LEAST 3 METHODS TO DERIVE THE ANSWER. USE BEST PRACTICES.
-
-
+In all-caps to improve prompt compliance by emphesizing the importance of the instruction, a set of tips and best practices are included as you can see above.
 
 Finally, after the problem is added as a user message, an assistant message is loaded to provide a standardized starting point for the LLM's generation.
 
-> Assistant: Thank you! I will now think step by step following my instructions, starting at the beginning after decomposing the problem
+***NOTE: The final step is not applied in some providers, that do not support it.***
 
 
 ### Credits
