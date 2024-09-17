@@ -1,16 +1,24 @@
 import streamlit as st
 import os
 from dotenv import load_dotenv, set_key
+from dataclasses import dataclass
 
+@dataclass
+class StInputs:
+    model:str
+    api_key:str
+    temperature:float
+    timeout:float
+    sleeptime:float
+    max_steps:int
+    max_tokens:int
+    
+    
 def load_env_vars():
     load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
     return {
-        'OLLAMA_URL': os.getenv('OLLAMA_URL', 'http://localhost:11434'),
-        'OLLAMA_MODEL': os.getenv('OLLAMA_MODEL', 'mistral'),
-        'PERPLEXITY_API_KEY': os.getenv('PERPLEXITY_API_KEY', ''),
-        'PERPLEXITY_MODEL': os.getenv('PERPLEXITY_MODEL', 'mistral-7b-instruct'),
-        'GROQ_API_KEY': os.getenv('GROQ_API_KEY', ''),
-        'GROQ_MODEL': os.getenv('GROQ_MODEL', 'mixtral-8x7b-32768')
+        'MODEL': os.getenv('MODEL', 'gemini/gemini-1.5-pro'),
+        "MODEL_API_KEY": os.getenv("MODEL_API_KEY", ""),
     }
 
 def save_env_vars(config):
@@ -20,30 +28,31 @@ def save_env_vars(config):
 
 def config_menu():
     st.sidebar.markdown("## 🛠️ Configuration")
-    
     config = load_env_vars()
     
     with st.sidebar.expander("Edit Configuration"):
         new_config = {}
-        new_config['OLLAMA_URL'] = st.text_input("Ollama URL", value=config['OLLAMA_URL'])
-        new_config['OLLAMA_MODEL'] = st.text_input("Ollama Model", value=config['OLLAMA_MODEL'])
-        new_config['PERPLEXITY_API_KEY'] = st.text_input("Perplexity API Key", value=config['PERPLEXITY_API_KEY'], type="password")
-        new_config['PERPLEXITY_MODEL'] = st.text_input("Perplexity Model", value=config['PERPLEXITY_MODEL'])
-        new_config['GROQ_API_KEY'] = st.text_input("Groq API Key", value=config['GROQ_API_KEY'], type="password")
-        new_config['GROQ_MODEL'] = st.text_input("Groq Model", value=config['GROQ_MODEL'])
+        model = new_config['MODEL'] = st.text_input("Model (in Litellm style, provider/llm-name)", value=config['MODEL'], placeholder='openai/gpt-3.5-turbo') 
+        api_key = new_config['MODEL_API_KEY'] = st.text_input("Model API Key", value=config['MODEL_API_KEY'], placeholder='api key here') 
+        timeout = st.number_input("Timout",           value=30.0, min_value=1.0, max_value=60.0, step=1.0)  
+        max_tokens =st.number_input("Max Tokens",     value=512, min_value=300, max_value=2048, step = 100)  
+        temperature =st.number_input("Temperature",   value=0.1, min_value=0.0, max_value=2.0, step=0.1)
+        max_steps = st.number_input("Max Steps (number of reasoning steps)",      value=20, min_value=1, max_value=20, step=1)
+        sleeptime = st.number_input("Sleeptime between request hits(to avoid too many requests error)" ,value=1.0, min_value=0.0, max_value=30.0, step=1.0)
         
         if st.button("Save Configuration"):
             save_env_vars(new_config)
             st.success("Configuration saved successfully!")
     
-    return config
+    inputs = StInputs(
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_tokens=max_tokens,
+        temperature=temperature,
+        max_steps=max_steps,
+        sleeptime=sleeptime
+    )
 
-def display_config(backend, config):
-    st.sidebar.markdown("## 🛠️ Current Configuration")
-    if backend == "Ollama":
-        st.sidebar.markdown(f"- 🖥️ Ollama URL: `{config['OLLAMA_URL']}`")
-        st.sidebar.markdown(f"- 🤖 Ollama Model: `{config['OLLAMA_MODEL']}`")
-    elif backend == "Perplexity AI":
-        st.sidebar.markdown(f"- 🧠 Perplexity AI Model: `{config['PERPLEXITY_MODEL']}`")
-    else:  # Groq
-        st.sidebar.markdown(f"- ⚡ Groq Model: `{config['GROQ_MODEL']}`")
+    return inputs
+
