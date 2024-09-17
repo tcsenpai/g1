@@ -2,10 +2,19 @@ import json
 import time
 import os
 
-def generate_response(prompt, api_handler):
+def generate_response(prompt, api_handler):# Get the absolute path to the system_prompt.txt file
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    system_prompt_path = os.path.join(current_dir, 'system_prompt.txt')
+
     # Load the system prompt from an external file
-    with open('system_prompt.txt', 'r') as file:
-        SYSTEM_PROMPT = file.read()
+    try:
+        with open(system_prompt_path, 'r') as file:
+            SYSTEM_PROMPT = file.read()
+    except FileNotFoundError:
+        print(f"Error: system_prompt.txt not found at {system_prompt_path}")
+        os._exit(-1)
+
     
     # Initialize the conversation with system prompt, user input, and an initial assistant response
     messages = [
