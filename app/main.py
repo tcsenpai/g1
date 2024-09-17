@@ -1,8 +1,9 @@
+from time import sleep
 import streamlit as st
 from dotenv import load_dotenv
-from api_handlers import OllamaHandler, PerplexityHandler, GroqHandler
+from api_handlers import LitellmHandler
 from utils import generate_response
-from config_menu import config_menu, display_config
+from config_menu import config_menu
 from logger import logger
 import os
 
@@ -28,13 +29,8 @@ def setup_page():
     </p>
     """, unsafe_allow_html=True)
 
-def get_api_handler(backend, config):
-    if backend == "Ollama":
-        return OllamaHandler(config['OLLAMA_URL'], config['OLLAMA_MODEL'])
-    elif backend == "Perplexity AI":
-        return PerplexityHandler(config['PERPLEXITY_API_KEY'], config['PERPLEXITY_MODEL'])
-    else:  # Groq
-        return GroqHandler(config['GROQ_API_KEY'], config['GROQ_MODEL'])
+def get_api_handler(model, api_key):
+    return LitellmHandler(model=model, api_key=api_key)
 
 def main():
     logger.info("Starting the application")
@@ -43,10 +39,7 @@ def main():
     st.sidebar.markdown('<h3 class="sidebar-title">⚙️ Settings</h3>', unsafe_allow_html=True)
     config = config_menu()
     
-    backend = st.sidebar.selectbox("Choose AI Backend", ["Ollama", "Perplexity AI", "Groq"])
-    display_config(backend, config)
-    api_handler = get_api_handler(backend, config)
-    logger.info(f"Selected backend: {backend}")
+    api_handler = get_api_handler(model=config.model, api_key=config.api_key)
 
     user_query = st.text_input("💬 Enter your query:", placeholder="e.g., How many 'R's are in the word strawberry?")
 
@@ -56,8 +49,15 @@ def main():
         response_container = st.empty()
         time_container = st.empty()
 
+
+        max_steps=    config.max_steps
+        max_tokens=   config.max_tokens
+        temperature=  config.temperature
+        timeout=      config.timeout
+        sleeptime=    config.sleeptime
+        
         try:
-            for steps, total_thinking_time in generate_response(user_query, api_handler):
+            for steps, total_thinking_time in generate_response(user_query, api_handler, max_steps=max_steps, max_tokens=max_tokens, temperature=temperature, timeout=timeout, sleeptime=sleeptime):
                 with response_container.container():
                     for title, content, _ in steps:
                         if title.startswith("Final Answer"):
