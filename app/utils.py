@@ -37,7 +37,7 @@ def generate_response(prompt, api_handler):
 
         messages.append({"role": "assistant", "content": json.dumps(step_data)})
         print("Next reasoning step: ", step_data["next_action"])
-        if step_data["next_action"].lower().strip() == "final_answer":
+        if step_data["next_action"].lower().strip() == "final_answer" or step_count > 10: # Prevents infinite loops in case of errors.
             break
 
         step_count += 1
