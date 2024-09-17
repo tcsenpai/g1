@@ -4,15 +4,18 @@
 
 ## Features
 
-- [x] Using Llama-3.1 70b on Groq to create o1-like reasoning chains
-- [x] Using Ollama to create o1-like reasoning chains
-- [x] Using Perplexity to create o1-like reasoning chains
 - [x] Using an unified interface to try out different providers
+- [x] Configuring the app from the sidebar
+
+## Providers
+
+- [x] Ollama (local)
+- [x] Perplexity (remote, requires API key)
+- [x] Groq (remote, requires API key)
 
 ## Work in progress
 
 - [ ] Add more providers
-- [ ] Use something like LiteLLM to unify models code and avoid repeating code for each provider
 
 ## Example
 
@@ -61,12 +64,12 @@ To use the launcher, follow these instructions:
    cp example.env .env
    ```
 
-3. Edit the .env file with your API keys / models preferences.
+3. Edit the .env file with your API keys / models preferences (or do it from the app's configuration menu)
 
 4. Run the main interface
 
    ```
-   streamlit run main.py
+   streamlit run app/main.py
    ```
 
 ---

@@ -8,6 +8,9 @@ env/
 venv/
 ENV/
 
+# Logs
+logs/
+
 # Streamlit
 .streamlit/
 

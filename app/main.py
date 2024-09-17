@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from api_handlers import OllamaHandler, PerplexityHandler, GroqHandler
 from utils import generate_response
 from config_menu import config_menu, display_config
+from logger import logger
 import os
 
 # Load environment variables
@@ -36,6 +37,7 @@ def get_api_handler(backend, config):
         return GroqHandler(config['GROQ_API_KEY'], config['GROQ_MODEL'])
 
 def main():
+    logger.info("Starting the application")
     setup_page()
 
     st.sidebar.markdown('<h3 class="sidebar-title">⚙️ Settings</h3>', unsafe_allow_html=True)
@@ -44,26 +46,35 @@ def main():
     backend = st.sidebar.selectbox("Choose AI Backend", ["Ollama", "Perplexity AI", "Groq"])
     display_config(backend, config)
     api_handler = get_api_handler(backend, config)
+    logger.info(f"Selected backend: {backend}")
 
     user_query = st.text_input("💬 Enter your query:", placeholder="e.g., How many 'R's are in the word strawberry?")
 
     if user_query:
+        logger.info(f"Received user query: {user_query}")
         st.write("🔍 Generating response...")
         response_container = st.empty()
         time_container = st.empty()
 
-        for steps, total_thinking_time in generate_response(user_query, api_handler):
-            with response_container.container():
-                for title, content, _ in steps:
-                    if title.startswith("Final Answer"):
-                        st.markdown(f'<h3 class="expander-title">🎯 {title}</h3>', unsafe_allow_html=True)
-                        st.markdown(f'<div>{content}</div>', unsafe_allow_html=True)
-                    else:
-                        with st.expander(f"📝 {title}", expanded=True):
+        try:
+            for steps, total_thinking_time in generate_response(user_query, api_handler):
+                with response_container.container():
+                    for title, content, _ in steps:
+                        if title.startswith("Final Answer"):
+                            st.markdown(f'<h3 class="expander-title">🎯 {title}</h3>', unsafe_allow_html=True)
                             st.markdown(f'<div>{content}</div>', unsafe_allow_html=True)
+                            logger.info(f"Final answer generated: {content}")
+                        else:
+                            with st.expander(f"📝 {title}", expanded=True):
+                                st.markdown(f'<div>{content}</div>', unsafe_allow_html=True)
+                            logger.debug(f"Step completed: {title}")
 
-            if total_thinking_time is not None:
-                time_container.markdown(f'<p class="thinking-time">⏱️ Total thinking time: {total_thinking_time:.2f} seconds</p>', unsafe_allow_html=True)
+                if total_thinking_time is not None:
+                    time_container.markdown(f'<p class="thinking-time">⏱️ Total thinking time: {total_thinking_time:.2f} seconds</p>', unsafe_allow_html=True)
+                    logger.info(f"Total thinking time: {total_thinking_time:.2f} seconds")
+        except Exception as e:
+            logger.error(f"Error generating response: {str(e)}", exc_info=True)
+            st.error("An error occurred while generating the response. Please try again.")
 
 if __name__ == "__main__":
     main()

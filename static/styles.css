@@ -27,3 +27,64 @@ h1, h2, h3, h4, h5, h6 {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: bold;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Apply fade-in animation to main content */
+.main .block-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Apply slide-in animation to expanders */
+.streamlit-expanderHeader {
+    animation: slideIn 0.3s ease-out;
+    transition: background-color 0.3s ease;
+}
+
+/* Smooth transition for expander content */
+.streamlit-expanderContent {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Pulse animation for thinking time */
+.thinking-time {
+    animation: pulse 2s infinite;
+}
+
+/* Hover effect for buttons */
+.stButton > button {
+    transition: all 0.3s ease;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Smooth transition for selectbox */
+.stSelectbox {
+    transition: all 0.3s ease;
+}
+
+/* Subtle hover effect for text input */
+.stTextInput > div > div > input {
+    transition: all 0.3s ease;
+}
+
+.stTextInput > div > div > input:hover {
+    box-shadow: 0 0 0 1px rgba(49, 51, 63, 0.2);
+}
