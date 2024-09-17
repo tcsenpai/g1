@@ -4,14 +4,11 @@
 
 ## Features
 
-- [x] Using an unified interface to try out different providers
 - [x] Configuring the app from the sidebar
 
 ## Providers
 
-- [x] Ollama (local)
-- [x] Perplexity (remote, requires API key)
-- [x] Groq (remote, requires API key)
+ - [x] 100+ LLMS (via Litellm)
 
 ## Work in progress
 
