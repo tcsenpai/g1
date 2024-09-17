@@ -1,0 +1,29 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.main-title {
+    text-align: center;
+}
+
+.main-description {
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.sidebar-title {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.expander-title {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.thinking-time {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: bold;
+}

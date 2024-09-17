@@ -14,9 +14,9 @@
 - [ ] Add more providers
 - [ ] Use something like LiteLLM to unify models code and avoid repeating code for each provider
 
-## Original G1 Example video
+## Example
 
-[Video Demo](https://github.com/user-attachments/assets/db2a221f-f8eb-48c3-b5a7-8399c6300243)
+![Simple Math](examples/maths.png)
 
 ## Description
 
@@ -36,31 +36,11 @@ At each step, the LLM can choose to continue to another reasoning step, or provi
 The reasoning ability of the LLM is therefore improved through combining Chain-of-Thought with the requirement to try multiple methods, explore alternative answers, question previous draft solutions, and consider the LLM’s limitations. This alone, without any training, is sufficient to achieve ~70% accuracy on the Strawberry problem (n=10, "How many Rs are in strawberry?"). Without prompting, Llama-3.1-70b had 0% accuracy and ChatGPT-4o had 30% accuracy.
 
 
-### Examples
+### Disclaimer
 
 > [!IMPORTANT]
 > multi1 is not perfect, but it can perform significantly better than LLMs out-of-the-box. From initial testing, multi1 accurately solves simple logic problems 60-80% of the time that usually stump LLMs. However, accuracy has yet to be formally evaluated. See examples below.
 
-
-##### How many Rs are in strawberry?
-Prompt: How many Rs are in strawberry?
-
-Result:
-
-![Strawberry example](examples/strawberry.png)
-
----
-
-Prompt: Which is larger, .9 or .11?
-
-Result:
-
-![0.9 or 0.11 example](examples/math.png)
-
-
-Prompt: In the context of Lie Group and Lie Algebra, let $R \in E$ be an irreducible root system. Show that then $E$ is an irreducible representation of the Weyl group $W$.
-
-![](examples/lie.1.png)
 
 
 ### Quickstart
