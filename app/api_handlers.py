@@ -4,16 +4,19 @@ import groq
 import time
 from abc import ABC, abstractmethod
 
+# Abstract base class for API handlers
 class BaseHandler(ABC):
     def __init__(self):
-        self.max_attempts = 3
-        self.retry_delay = 1
+        self.max_attempts = 3  # Maximum number of retry attempts
+        self.retry_delay = 1   # Delay between retry attempts in seconds
 
     @abstractmethod
     def _make_request(self, messages, max_tokens):
+        # Abstract method to be implemented by subclasses
         pass
 
     def make_api_call(self, messages, max_tokens, is_final_answer=False):
+        # Attempt to make an API call with retry logic
         for attempt in range(self.max_attempts):
             try:
                 response = self._make_request(messages, max_tokens)
@@ -24,15 +27,18 @@ class BaseHandler(ABC):
                 time.sleep(self.retry_delay)
 
     def _process_response(self, response, is_final_answer):
+        # Default response processing (can be overridden by subclasses)
         return json.loads(response)
 
     def _error_response(self, error_msg, is_final_answer):
+        # Generate an error response
         return {
             "title": "Error",
             "content": f"Failed to generate {'final answer' if is_final_answer else 'step'} after {self.max_attempts} attempts. Error: {error_msg}",
             "next_action": "final_answer" if is_final_answer else "continue"
         }
 
+# Handler for Ollama API
 class OllamaHandler(BaseHandler):
     def __init__(self, url, model):
         super().__init__()
@@ -40,6 +46,7 @@ class OllamaHandler(BaseHandler):
         self.model = model
 
     def _make_request(self, messages, max_tokens):
+        # Make a request to the Ollama API
         response = requests.post(
             f"{self.url}/api/chat",
             json={
@@ -57,6 +64,30 @@ class OllamaHandler(BaseHandler):
         print(response.json())
         return response.json()["message"]["content"]
 
+    def _process_response(self, response, is_final_answer):
+        # Process the Ollama API response
+        if isinstance(response, dict) and 'message' in response:
+            content = response['message']['content']
+        else:
+            content = response
+
+        try:
+            parsed_content = json.loads(content)
+            if 'final_answer' in parsed_content:
+                return {
+                    "title": "Final Answer",
+                    "content": parsed_content['final_answer'],
+                    "next_action": "final_answer"
+                }
+            return parsed_content
+        except json.JSONDecodeError:
+            return {
+                "title": "Raw Response",
+                "content": content,
+                "next_action": "final_answer" if is_final_answer else "continue"
+            }
+
+# Handler for Perplexity API
 class PerplexityHandler(BaseHandler):
     def __init__(self, api_key, model):
         super().__init__()
@@ -64,6 +95,7 @@ class PerplexityHandler(BaseHandler):
         self.model = model
 
     def _clean_messages(self, messages):
+        # Clean and consolidate messages for the Perplexity API
         cleaned_messages = []
         last_role = None
         for message in messages:
@@ -74,12 +106,13 @@ class PerplexityHandler(BaseHandler):
                 last_role = message["role"]
             elif message["role"] == "user":
                 cleaned_messages[-1]["content"] += "\n" + message["content"]
-        # If the last message is an assistant message, delete it
+        # Remove the last assistant message if present
         if cleaned_messages and cleaned_messages[-1]["role"] == "assistant":
             cleaned_messages.pop()  
         return cleaned_messages
 
     def _make_request(self, messages, max_tokens):
+        # Make a request to the Perplexity API
         cleaned_messages = self._clean_messages(messages)
 
         url = "https://api.perplexity.ai/chat/completions"
@@ -99,6 +132,7 @@ class PerplexityHandler(BaseHandler):
             raise  # Re-raise the exception if it's not a 400 error
 
     def _process_response(self, response, is_final_answer):
+        # Process the Perplexity API response
         try:
             return super()._process_response(response, is_final_answer)
         except json.JSONDecodeError:
@@ -110,12 +144,14 @@ class PerplexityHandler(BaseHandler):
                 "next_action": "final_answer" if (is_final_answer or forced_final_answer) else "continue"
             }
 
+# Handler for Groq API
 class GroqHandler(BaseHandler):
     def __init__(self):
         super().__init__()
         self.client = groq.Groq()
 
     def _make_request(self, messages, max_tokens):
+        # Make a request to the Groq API
         response = self.client.chat.completions.create(
             model="llama-3.1-70b-versatile",
             messages=messages,
