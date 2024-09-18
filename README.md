@@ -1,7 +1,7 @@
 # multi1: Using multiple AI providers to create o1-like reasoning chains
 
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown.
-
+ 
 ## Features
 
 - [x] Using an unified interface to try out different providers
