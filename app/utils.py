@@ -1,6 +1,7 @@
 import json
 import time
 import os
+import streamlit as st
 
 def generate_response(prompt, api_handler):# Get the absolute path to the system_prompt.txt file
     
@@ -80,3 +81,35 @@ def load_env_vars():
         "PERPLEXITY_API_KEY": os.getenv("PERPLEXITY_API_KEY"),
         "PERPLEXITY_MODEL": os.getenv("PERPLEXITY_MODEL", "llama-3.1-sonar-small-128k-online"),
     }
+
+def litellm_instructions():
+    st.sidebar.markdown("""
+    ### LiteLLM Configuration Instructions:
+    1. **Model**: Enter the model name (e.g., 'gpt-3.5-turbo', 'claude-2').
+                        For Ollama, use 'ollama/{model_name}'
+    2. **API Base**: 
+       - For Ollama: Leave blank or use 'http://localhost:11434'
+       - For OpenAI: Leave blank or use 'https://api.openai.com/v1'
+       - For Anthropic: Use 'https://api.anthropic.com'
+       - For other providers: Enter their specific API base URL
+    3. **API Key**: Enter your API key for the chosen provider (only if required by the provider).
+
+    Note: Ensure you have the necessary permissions and credits for the selected model and provider.
+    """)
+
+def litellm_config():
+    if 'litellm_config' not in st.session_state:
+        st.session_state.litellm_config = {}
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.session_state.litellm_config['model'] = st.text_input("Model", value=st.session_state.litellm_config.get('model', 'ollama/qwen2:1.5b'))
+    
+    with col2:
+        st.session_state.litellm_config['api_base'] = st.text_input("API Base", value=st.session_state.litellm_config.get('api_base', ''))
+    
+    with col3:
+        st.session_state.litellm_config['api_key'] = st.text_input("API Key", value=st.session_state.litellm_config.get('api_key', ''), type="password")
+
+    st.info("Configuration is automatically saved in the session. No need to click a save button.")

@@ -40,3 +40,4 @@ class BaseHandler(ABC):
 from handlers.ollama_handler import OllamaHandler
 from handlers.perplexity_handler import PerplexityHandler
 from handlers.groq_handler import GroqHandler
+from handlers.litellm_handler import LiteLLMHandler

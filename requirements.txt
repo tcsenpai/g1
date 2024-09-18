@@ -3,3 +3,4 @@ groq
 python-dotenv
 requests
 blessed
+litellm

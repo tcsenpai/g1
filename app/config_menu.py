@@ -45,5 +45,5 @@ def display_config(backend, config):
         st.sidebar.markdown(f"- 🤖 Ollama Model: `{config['OLLAMA_MODEL']}`")
     elif backend == "Perplexity AI":
         st.sidebar.markdown(f"- 🧠 Perplexity AI Model: `{config['PERPLEXITY_MODEL']}`")
-    else:  # Groq
+    elif backend == "Groq":
         st.sidebar.markdown(f"- ⚡ Groq Model: `{config['GROQ_MODEL']}`")

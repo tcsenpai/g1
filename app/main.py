@@ -1,10 +1,11 @@
 import streamlit as st
 from dotenv import load_dotenv
 from api_handlers import OllamaHandler, PerplexityHandler, GroqHandler
-from utils import generate_response
+from utils import generate_response, litellm_config, litellm_instructions
 from config_menu import config_menu, display_config
 from logger import logger
 import os
+from handlers.litellm_handler import LiteLLMHandler
 
 # Load environment variables from .env file
 load_dotenv()
@@ -35,13 +36,19 @@ def setup_page():
     """, unsafe_allow_html=True)
 
 def get_api_handler(backend, config):
-    # Create and return the appropriate API handler based on the selected backend
     if backend == "Ollama":
         return OllamaHandler(config['OLLAMA_URL'], config['OLLAMA_MODEL'])
     elif backend == "Perplexity AI":
         return PerplexityHandler(config['PERPLEXITY_API_KEY'], config['PERPLEXITY_MODEL'])
-    else:  # Groq
+    elif backend == "Groq":
         return GroqHandler(config['GROQ_API_KEY'], config['GROQ_MODEL'])
+    else:  # LiteLLM
+        litellm_config = st.session_state.get('litellm_config', {})
+        return LiteLLMHandler(
+            litellm_config.get('model', ''),
+            litellm_config.get('api_base', ''),
+            litellm_config.get('api_key', '')
+        )
 
 def main():
     logger.info("Starting the application")
@@ -51,9 +58,15 @@ def main():
     st.sidebar.markdown('<h3 class="sidebar-title">⚙️ Settings</h3>', unsafe_allow_html=True)
     config = config_menu()
     
-    # Allow user to select the AI backend
-    backend = st.sidebar.selectbox("Choose AI Backend", ["Ollama", "Perplexity AI", "Groq"])
-    display_config(backend, config)
+    # Allow user to select the AI backend   
+    backend = st.sidebar.selectbox("Choose AI Backend", ["LiteLLM", "Ollama", "Perplexity AI", "Groq"])
+    
+    if backend == "LiteLLM":
+        litellm_instructions()
+        litellm_config()
+    else:
+        display_config(backend, config)
+    
     api_handler = get_api_handler(backend, config)
     logger.info(f"Selected backend: {backend}")
 
