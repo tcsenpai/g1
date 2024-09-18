@@ -14,9 +14,10 @@
     - [Disclaimer](#disclaimer)
     - [Quickstart](#quickstart)
     - [Prompting Strategy](#prompting-strategy)
-      - [Breakdown](#breakdown)
   - [Contributing](#contributing)
     - [Credits](#credits)
+
+multi1 is a tool that uses several AI providers (with an emphasis on LiteLLM) to create a reasoning chain that significantly improves the current reasoning capabilities of LLMs. Although it does not use o1, it is capable of significantly improving the current reasoning capabilities of LLMs. Llama 3.1 8b and above models work much better than older ones, but this can be applied to many available models.
 
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown.
  
@@ -42,6 +43,7 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 ## Work in progress
 
 - [ ] Further LiteLLM testing with remote providers
+- [ ] Reliable JSON output schema (especially for LiteLLM)
 - [ ] Create a better way to add new providers for developers
 
 
@@ -49,6 +51,7 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 
 We're looking for developers to help improve multi1! Here are some areas where you can contribute:
 
+- Improve LiteLLM backend to have a consistent handler for most providers
 - Test and implement new AI providers to expand the capabilities of multi1
 - Conduct more extensive testing of LiteLLM with various remote providers
 - Experiment with and refine the system prompt to enhance reasoning capabilities
@@ -62,11 +65,11 @@ Your contributions can help make multi1 a more robust and versatile tool for AI-
 
 ## Description
 
-***IMPORTANT: multi1 is a fork of [g1](https://github.com/bklieger-groq/g1/), made by [Benjamin Klieger](https://x.com/benjaminklieger). It was made as a way to experiment with multiple AI providers included local LLMs. All credits go to the original author.***
+***IMPORTANT: multi1 was created as a fork of [g1](https://github.com/bklieger-groq/g1/), made by [Benjamin Klieger](https://x.com/benjaminklieger).***
 
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown, and the app uses an open source model.
 
-multi1 is experimental and being open sourced to help inspire the open source community to develop new strategies to produce o1-like reasoning. This experiment helps show the power of prompting reasoning in visualized steps, not a comparison to or full replication of o1, which uses different techniques. OpenAI's o1 is instead trained with large-scale reinforcement learning to reason using Chain of Thought, achieving state-of-the-art performance on complex PhD-level problems.
+multi1 is experimental and is made to help inspire the open source community to develop new strategies to produce o1-like reasoning. This experiment helps show the power of prompting reasoning in visualized steps, not a comparison to or full replication of o1, which uses different techniques. OpenAI's o1 is instead trained with large-scale reinforcement learning to reason using Chain of Thought, achieving state-of-the-art performance on complex PhD-level problems.
 
 multi1 demonstrates the potential of prompting alone to overcome straightforward LLM logic issues like the Strawberry problem, allowing existing open source models to benefit from dynamic reasoning chains and an improved interface for exploring them.
 
@@ -83,19 +86,25 @@ The reasoning ability of the LLM is therefore improved through combining Chain-o
 ### Disclaimer
 
 > [!IMPORTANT]
-> multi1 is not perfect, but it can perform significantly better than LLMs out-of-the-box. From initial testing, multi1 accurately solves simple logic problems 60-80% of the time that usually stump LLMs. However, accuracy has yet to be formally evaluated. See examples below.
+> multi1 is not perfect, but it can perform significantly better than LLMs out-of-the-box. Accuracy has yet to be formally evaluated, especially considering the limitations of the prompting strategy and the amount of providers used. Each provider has its own limitations, and while multi1 tries to harmonise them all, there can (and will) be problems here and there. See [Contributing](#contributing) and [Call to Action](#call-to-action) for ways to help improve multi1 (and thank you in advance).
 
 
 
 ### Quickstart
 
-To use the launcher, follow these instructions:
+To use multi1, follow the below steps:
 
 1. Set up the environment:
 
    ```
    python3 -m venv venv
    source venv/bin/activate
+   pip3 install -r requirements.txt
+   ```
+
+   or, if you prefer not using venv:
+
+   ```
    pip3 install -r requirements.txt
    ```
 
@@ -117,56 +126,8 @@ To use the launcher, follow these instructions:
 
 ### Prompting Strategy
 
-The prompt is as follows:
+The prompt is contained in app/system_prompt.txt and uses clear instructions to conduct the LLM behavior.
 
-```
-You are an expert AI assistant that creates advanced reasoning chains. For each step, provide a title and content that demonstrates your thought process. Respond in JSON format with 'title', 'content', and 'next_action' (either 'continue' or 'final_answer') keys. FOLLOW THESE GUIDELINES:
-1. USE AT LEAST 5 REASONING STEPS, aiming for 7-10 steps for complex problems.
-2. EMPLOY MULTIPLE METHODS: Use at least 3 distinct approaches to derive the answer.
-3. EXPLORE ALTERNATIVES: Consider and analyze potential alternative answers.
-4. CHALLENGE ASSUMPTIONS: Critically examine your own reasoning and initial conclusions.
-5. ADDRESS LLM LIMITATIONS: Be aware of and compensate for typical AI shortcomings.
-6. VISUALIZE WHEN POSSIBLE: If applicable, describe how you would visually represent the problem.
-7. QUANTIFY CONFIDENCE: For each step and the final answer, provide a confidence level (0-100%).
-8. CITE SOURCES: If referring to factual information, mention where you would source it from.
-9. ETHICAL CONSIDERATIONS: If relevant, discuss any ethical implications of the problem or solution.
-10. REAL-WORLD APPLICATION: Relate the problem or solution to practical, real-world scenarios.
-11. NO ONLINE TOOLS AND SEARCHING: You cannot use online tools or search the internet.
-
-Example of a valid JSON response:
-{
-    "title": "Initial Problem Analysis",
-    "content": "To begin solving this problem, I'll break it down into its core components...",
-    "confidence": 90,
-    "next_action": "continue"
-}
-```
-
-#### Breakdown
-
-First, a persona is added:
-
-> You are an expert AI assistant that creates advanced reasoning chains.  
-
-
-
-Then, instructions to describe the expected step-by-step reasoning process while titling each reasoning step. This includes the ability for the LLM to decide if another reasoning step is needed or if the final answer can be provided.
-
-> For each step, provide a title and content that demonstrates your thought process.
-
-
-
-JSON formatting is introduced with an example provided later.
-
-> Respond in JSON format with 'title', 'content', and 'next_action' (either 'continue' or 'final_answer') keys.
-
-
-
-In all-caps to improve prompt compliance by emphesizing the importance of the instruction, a set of tips and best practices are included as you can see above.
-
-Finally, after the problem is added as a user message, an assistant message is loaded to provide a standardized starting point for the LLM's generation.
-
-***NOTE: The final step is not applied in some providers, that do not support it.***
 
 ## Contributing
 
@@ -185,5 +146,7 @@ For major changes, please open an issue first to discuss what you would like to 
 
 ### Credits
 
+multi1 is derived from g1.
+
 g1 was originally developed by [Benjamin Klieger](https://x.com/benjaminklieger).
-This multi1 fork was developed by [tcsenpai](https://github.com/tcsenpai).
+  
