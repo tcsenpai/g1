@@ -1,11 +1,12 @@
 # multi1: Using multiple AI providers to create o1-like reasoning chains
 
-***IMPORTANT: multi1 is a fork of [g1](https://github.com/bklieger-groq/g1/), made by [Benjamin Klieger](https://x.com/benjaminklieger). It was made as a way to experiment with multiple AI providers included local LLMs. All credits go to the original author.***
+This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown.
 
 ## Features
 
 - [x] Using an unified interface to try out different providers
 - [x] Configuring the app from the sidebar
+- [x] Modular design for quick provider adding 
 
 ## Providers
 
@@ -17,12 +18,15 @@
 
 - [ ] Add more providers
 - [ ] Possibly use LiteLLM instead of defining each provider
+- [ ] Create a guide to quickly add providers
 
 ## Example
 
 ![Simple Math](examples/maths.png)
 
 ## Description
+
+***IMPORTANT: multi1 is a fork of [g1](https://github.com/bklieger-groq/g1/), made by [Benjamin Klieger](https://x.com/benjaminklieger). It was made as a way to experiment with multiple AI providers included local LLMs. All credits go to the original author.***
 
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown, and the app uses an open source model.
 
