@@ -33,11 +33,11 @@ def config_menu():
     with st.sidebar.expander("Edit Configuration"):
         new_config = {}
         model = new_config['MODEL'] = st.text_input("Model (in Litellm style, provider/llm-name)", value=config['MODEL'], placeholder='openai/gpt-3.5-turbo') 
-        api_key = new_config['MODEL_API_KEY'] = st.text_input("Model API Key", value=config['MODEL_API_KEY'], placeholder='api key here') 
+        api_key = new_config['MODEL_API_KEY'] = st.text_input("Model API Key", value=config['MODEL_API_KEY'], placeholder='api key here', type='password') 
         timeout = st.number_input("Timout",           value=30.0, min_value=1.0, max_value=60.0, step=1.0)  
         max_tokens =st.number_input("Max Tokens",     value=512, min_value=300, max_value=2048, step = 100)  
         temperature =st.number_input("Temperature",   value=0.1, min_value=0.0, max_value=2.0, step=0.1)
-        max_steps = st.number_input("Max Steps (number of reasoning steps)",      value=20, min_value=1, max_value=20, step=1)
+        max_steps = st.number_input("Max Steps (number of reasoning steps)",      value=10, min_value=1, max_value=20, step=1)
         sleeptime = st.number_input("Sleeptime between request hits(to avoid too many requests error)" ,value=1.0, min_value=0.0, max_value=30.0, step=1.0)
         
         if st.button("Save Configuration"):
