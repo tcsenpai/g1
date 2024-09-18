@@ -14,11 +14,16 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 - [x] Perplexity (remote, requires API key)
 - [x] Groq (remote, requires API key)
 
+## Developer Resources
+
+- Instructions for adding new providers can be found in `app/utils/providers/instructions.md`
+- A skeleton provider template is available at `app/utils/providers/skeleton_provider.py`
+
 ## Work in progress
 
 - [ ] Add more providers
 - [ ] Possibly use LiteLLM instead of defining each provider
-- [ ] Create a guide to quickly add providers
+- [ ] Create a better way to add new providers for developers
 
 ## Example
 
