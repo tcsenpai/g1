@@ -5,11 +5,13 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 ## Features
 
 - [x] Using an unified interface to try out different providers
+- [x] LiteLLM default provider with local and remote support
 - [x] Configuring the app from the sidebar
 - [x] Modular design for quick provider adding 
 
 ## Providers
 
+- [x] LiteLLM (local and remote)
 - [x] Ollama (local)
 - [x] Perplexity (remote, requires API key)
 - [x] Groq (remote, requires API key)
@@ -21,8 +23,7 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 
 ## Work in progress
 
-- [ ] Add more providers
-- [ ] Possibly use LiteLLM instead of defining each provider
+- [ ] Further LiteLLM testing with remote providers
 - [ ] Create a better way to add new providers for developers
 
 ## Example
