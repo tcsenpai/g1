@@ -1,5 +1,23 @@
 # multi1: Using multiple AI providers to create o1-like reasoning chains
 
+## Table of Contents
+- [multi1: Using multiple AI providers to create o1-like reasoning chains](#multi1-using-multiple-ai-providers-to-create-o1-like-reasoning-chains)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Providers](#providers)
+    - [Developer Resources for adding new providers](#developer-resources-for-adding-new-providers)
+  - [Work in progress](#work-in-progress)
+  - [Call to Action](#call-to-action)
+  - [Example](#example)
+  - [Description](#description)
+    - [How it works](#how-it-works)
+    - [Disclaimer](#disclaimer)
+    - [Quickstart](#quickstart)
+    - [Prompting Strategy](#prompting-strategy)
+      - [Breakdown](#breakdown)
+  - [Contributing](#contributing)
+    - [Credits](#credits)
+
 This is an early prototype of using prompting strategies to improve the LLM's reasoning capabilities through o1-like reasoning chains. This allows the LLM to "think" and solve logical problems that usually otherwise stump leading models. Unlike o1, all the reasoning tokens are shown.
  
 ## Features
@@ -16,7 +34,7 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 - [x] Perplexity (remote, requires API key)
 - [x] Groq (remote, requires API key)
 
-## Developer Resources
+### Developer Resources for adding new providers
 
 - Instructions for adding new providers can be found in `app/utils/providers/instructions.md`
 - A skeleton provider template is available at `app/utils/providers/skeleton_provider.py`
@@ -25,6 +43,18 @@ This is an early prototype of using prompting strategies to improve the LLM's re
 
 - [ ] Further LiteLLM testing with remote providers
 - [ ] Create a better way to add new providers for developers
+
+
+## Call to Action
+
+We're looking for developers to help improve multi1! Here are some areas where you can contribute:
+
+- Test and implement new AI providers to expand the capabilities of multi1
+- Conduct more extensive testing of LiteLLM with various remote providers
+- Experiment with and refine the system prompt to enhance reasoning capabilities
+
+Your contributions can help make multi1 a more robust and versatile tool for AI-powered reasoning chains.
+
 
 ## Example
 
@@ -137,6 +167,20 @@ In all-caps to improve prompt compliance by emphesizing the importance of the in
 Finally, after the problem is added as a user message, an assistant message is loaded to provide a standardized starting point for the LLM's generation.
 
 ***NOTE: The final step is not applied in some providers, that do not support it.***
+
+## Contributing
+
+We welcome contributions to multi1! Here's how you can help:
+
+1. Fork the repository
+2. Create a new branch for your feature or bug fix
+3. Make your changes and commit them with clear, descriptive messages
+4. Push your changes to your fork
+5. Submit a pull request to the main repository
+
+Please ensure your code adheres to the project's coding standards and include tests for new features or bug fixes.
+
+For major changes, please open an issue first to discuss what you would like to change. This ensures that your efforts align with the project's goals and direction.
 
 
 ### Credits
