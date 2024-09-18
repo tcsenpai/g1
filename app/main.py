@@ -24,8 +24,7 @@ def setup_page():
     """, unsafe_allow_html=True)
     st.markdown("""
     <p class="main-description">
-        This app demonstrates AI reasoning chains using different backends: Ollama, Perplexity AI, and Groq.
-        Choose a backend and enter your query to see the step-by-step reasoning process.
+        This app demonstrates AI reasoning chains. Enter your query to see the step-by-step reasoning process.
     </p>
     """, unsafe_allow_html=True)
 
@@ -42,8 +41,9 @@ def main():
     api_handler = get_api_handler(model=config.model, api_key=config.api_key)
 
     user_query = st.text_input("💬 Enter your query:", placeholder="e.g., How many 'R's are in the word strawberry?")
+    submit = st.button('Think')
 
-    if user_query:
+    if submit and user_query:
         logger.info(f"Received user query: {user_query}")
         st.write("🔍 Generating response...")
         response_container = st.empty()
