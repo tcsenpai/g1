@@ -23,7 +23,7 @@ class LiteLLMHandler(BaseHandler):
             messages=messages,
             response_format= { "type": "json_schema", "json_schema": ResponseSchema.model_json_schema()  , "strict": True },
             max_tokens=max_tokens,
-            temperature=0.2,
+            temperature=0.5,
             api_base=self.api_base,
             api_key=self.api_key,
             stream=False,
